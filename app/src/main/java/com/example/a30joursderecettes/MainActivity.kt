@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.a30joursderecettes.ui.theme._30JoursDeRecettesTheme
 import androidx.annotation.StringRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.layout.Spacer
@@ -36,6 +37,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 
@@ -137,8 +142,9 @@ fun RecipeItem(
     recipe: Recipe,
     modifier: Modifier = Modifier
 ) {
+    var expanded by remember { mutableStateOf(false) }
     Card(
-        modifier = modifier,
+        modifier = modifier.clickable { expanded = !expanded },
         shape = MaterialTheme.shapes.medium,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
@@ -156,19 +162,22 @@ fun RecipeItem(
             )
             Spacer(modifier = Modifier.height(8.dp))
             RecipeImage(recipeImage = recipe.imageResourceId)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = stringResource(recipe.ingredients),
-                style = MaterialTheme.typography.bodyMedium
-            )
+            if (expanded) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = stringResource(recipe.ingredients),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
         }
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
 fun JoursDeRecettesPreview() {
-    _30JoursDeRecettesTheme {
+    _30JoursDeRecettesTheme(darkTheme = true) {
         RecipesApp()
     }
 }
